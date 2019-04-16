@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+    latex:
+        build: .
+        container_name: latex
+
+        command: xelatex example/bewerbung.tex
+
+        volumes:
+            - .:/code/

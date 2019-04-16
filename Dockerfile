@@ -1,13 +1,17 @@
-FROM ubuntu:18.04
-MAINTAINER Julian Lobe <julian@lobe.me>
+FROM ubuntu:18.10
 
-# update system
-RUN apt-get update
-RUN apt-get upgrade -y && apt-get dist-upgrade -y
+ENV DEBIAN_FRONTEND=noninteractive
+ENV TZ=Europe/Berlin
 
-# install LaTeX
-RUN apt-get install -y --no-install-recommends --no-install-suggests texlive texlive-lang-german texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-extra texlive-xetex texlive-luatex
+RUN mkdir /code
+WORKDIR /code
 
-VOLUME /src
-WORKDIR /src
-CMD pdflatex /src/document.tex
+RUN apt-get update && \
+    apt-get install -y texlive texlive-binaries texinfo lmodern wget texlive-xetex texlive-fonts-extra ttf-ubuntu-font-family fonts-liberation
+
+RUN wget http://mirrors.ctan.org/macros/latex/contrib/moderncv.zip && \
+    unzip moderncv.zip && \
+    mkdir -p ~/texmf/tex/latex && \
+    mv moderncv/ ~/texmf/tex/latex/
+
+RUN texhash ~/texmf/
